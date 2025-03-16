@@ -7,3 +7,13 @@ A clear understanding of these interfaces is essential, as they are among the mo
 
 
 ## 3.2 Technical context
+![Technical system context](technical-system-context.png)
+
+The system uses a MCP Fileserver. The Model Context Protocol was created by Antrophic.
+It describes a way to provide context, i.e. prompt templates, resources, tools, to a LLM.
+The MCP Fileserver is used to access file on the local machine.
+
+OpenAI is currently the only LLM vendor used by the system.
+
+All agent output is stored in an postgres. The postgres runs in a docker container on
+the local machine.
