@@ -1,10 +1,18 @@
 # 3. Context and Scope
-This section describes the boundaries of the system from its communication partners, including adjacent systems and users. The external interfaces are specified. If necessary, a distinction is made between the business context (domain-specific inputs and outputs) and the technical context (channels, protocols, hardware).
+This section describes the boundaries of the system from its communication partners, including adjacent systems and users. 
+
+The system is presented as a black box.
+
+The external interfaces are specified. If necessary, a distinction is made between the business context (domain-specific inputs and outputs) and the technical context (channels, protocols, hardware).
 
 A clear understanding of these interfaces is essential, as they are among the most critical aspects of the system.
 
 ## 3.1 Business context
+![Business system context](business-system-context.png)
 
+The user must have an OpenAI account as well as an api key.
+The user must then provide the API key to the system
+in order to use it.
 
 ## 3.2 Technical context
 ![Technical system context](technical-system-context.png)
