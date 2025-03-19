@@ -8,7 +8,8 @@ The system is presented as a white box.
 
 The system agent workflow has three components at level 1.
 
-The "Workflow-Engine" provides shell commands that can be
+Workflow-Engine
+- The "Workflow-Engine" provides shell commands that can be
 used to execute a workflow. The port "standard I/O"
 is used to pass the shell commands to the engine.
 The Workflow Engine will read the workflow specification
@@ -18,7 +19,19 @@ inside the workflow specification.
 The Workflow Engine will also save the execution
 state inside a database, as well as the agent outputs.
 
-The agents may create an MCP client if necessary.
-The "MCP-Clients" will make calls to MCP servers using
-the MCP protocol port.
+agents
+- Agents provide specific capabilities such as file writing
+and llm calls. 
+
+MCP-Clients
+- The agents may create an MCP client if necessary.
+The "MCP-Clients" will make calls to the MCP-Fileserver
+in order read or write files. The communicate
+over the MCP-Protocoll.
+
+LLM-Gateway
+- The LLM-Gateway enables the system to make llm calls to
+various llm providers.
+- If a fallback occurs the llm gateway will route the call
+to a different llm.
 
