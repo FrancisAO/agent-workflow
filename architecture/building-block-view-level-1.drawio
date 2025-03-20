@@ -26,7 +26,7 @@
         <mxCell id="tQ_XuF9a8gpRSeQdMn-i-5" value="" style="html=1;" parent="1" vertex="1">
           <mxGeometry x="-30" y="285" width="30" height="30" as="geometry" />
         </mxCell>
-        <mxCell id="tQ_XuF9a8gpRSeQdMn-i-8" value="&amp;lt;&amp;lt;subsystem&amp;gt;&amp;gt;&lt;br&gt;&lt;b&gt;agents&lt;/b&gt;" style="html=1;dropTarget=0;whiteSpace=wrap;" parent="1" vertex="1">
+        <mxCell id="tQ_XuF9a8gpRSeQdMn-i-8" value="&amp;lt;&amp;lt;subsystem&amp;gt;&amp;gt;&lt;br&gt;&lt;b&gt;Agents&lt;/b&gt;" style="html=1;dropTarget=0;whiteSpace=wrap;" parent="1" vertex="1">
           <mxGeometry x="280" y="260" width="120" height="80" as="geometry" />
         </mxCell>
         <mxCell id="tQ_XuF9a8gpRSeQdMn-i-9" value="" style="shape=module;jettyWidth=8;jettyHeight=4;" parent="tQ_XuF9a8gpRSeQdMn-i-8" vertex="1">
