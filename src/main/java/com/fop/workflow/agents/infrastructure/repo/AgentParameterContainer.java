@@ -1,12 +1,8 @@
 package com.fop.workflow.agents.infrastructure.repo;
-import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
-
-import com.fop.workflow.agents.application.parameter.AgentParameterSemantic;
-import com.fop.workflow.agents.application.parameter.AgentParameterType;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -53,6 +49,10 @@ public class AgentParameterContainer {
 
     public String getAgentId() {
         return agentId;
+    }
+
+    public Long getId() {
+        return id;
     }
 
     /**

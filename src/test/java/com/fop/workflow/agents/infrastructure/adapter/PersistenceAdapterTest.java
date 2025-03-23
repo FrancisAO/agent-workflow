@@ -5,7 +5,6 @@ import com.fop.workflow.agents.infrastructure.repo.AgentParameterContainerReposi
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.Arrays;
 import java.util.List;
@@ -40,19 +39,20 @@ public class PersistenceAdapterTest {
         List<AgentParameterModel> parameters = Arrays.asList(param1, param2);
 
         AgentParameterContainerModel model = new AgentParameterContainerModel();
-        model.setId(1L);
         model.setAgentId("agent-123");
         model.setParameters(parameters);
 
+        // Clear the repository before saving
+        agentParameterContainerRepo.deleteAll();
+
         // When
-        persistenceAdapter.save(model);
+        Long id = persistenceAdapter.save(model);
 
         // Then
-        assertThat(agentParameterContainerRepo.findById(1L)).isPresent();
-        assertThat(agentParameterContainerRepo.findById(1L).get().getParameters()).hasSize(2);
-        assertThat(agentParameterContainerRepo.findById(1L).get().getParameters().get(0).getSemantic().getSemantic())
-                .isEqualTo(param1.getSemantic().getSemantic());
-        assertThat(agentParameterContainerRepo.findById(1L).get().getParameters().get(1).getSemantic().getSemantic())
-                .isEqualTo(param2.getSemantic().getSemantic());
+        var savedContainer = agentParameterContainerRepo.findById(id);
+        assertThat(savedContainer).isPresent();
+        assertThat(savedContainer.get().getParameters()).hasSize(2);
+        assertThat(savedContainer.get().getParameters().get(0).getSemantic()).isEqualTo(param1.getSemantic());
+        assertThat(savedContainer.get().getParameters().get(1).getSemantic()).isEqualTo(param2.getSemantic());
     }
 }

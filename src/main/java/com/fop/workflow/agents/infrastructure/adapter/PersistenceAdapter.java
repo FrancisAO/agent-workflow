@@ -22,7 +22,7 @@ public class PersistenceAdapter implements PersistencePort {
 
     @Transactional
     @Override
-    public void save(AgentParameterContainerModel agentParameterContainerModel) {
+    public Long save(AgentParameterContainerModel agentParameterContainerModel) {
         AgentParameterContainer agentParameterContainer = new AgentParameterContainer();
         agentParameterContainer.setId(agentParameterContainerModel.getId());
         agentParameterContainer.setAgentId(agentParameterContainerModel.getAgentId());
@@ -31,7 +31,7 @@ public class PersistenceAdapter implements PersistencePort {
                         paramModel.getValue(), paramModel.getCreatedAt()))
                 .collect(Collectors.toList()));
 
-        agentParameterContainerRepo.save(agentParameterContainer);
+        return agentParameterContainerRepo.save(agentParameterContainer).getId();
     }
 
 
