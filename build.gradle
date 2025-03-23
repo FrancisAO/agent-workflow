@@ -30,6 +30,7 @@ dependencies {
 	implementation 'org.springframework.shell:spring-shell-starter'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.shell:spring-shell-starter-test'
+	testImplementation 'com.h2database:h2'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
