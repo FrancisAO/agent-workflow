@@ -1,0 +1,69 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "version": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "agents": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "system_message": {
+            "type": "string"
+          },
+          "prompt": {
+            "type": "string"
+          }
+        },
+        "required": ["name", "type"]
+      }
+    },
+    "workflow": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "from": {
+            "type": "string"
+          },
+          "to": {
+            "type": "string"
+          },
+          "loop": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "condition": {
+                  "type": "string"
+                },
+                "max_iterations": {
+                  "type": "integer"
+                }
+              },
+              "required": ["condition", "max_iterations"]
+            }
+          }
+        },
+        "required": ["from", "to"]
+      }
+    }
+  }
+}

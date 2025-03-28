@@ -2,6 +2,7 @@ plugins {
 	id 'java'
 	id 'org.springframework.boot' version '3.4.3'
 	id 'io.spring.dependency-management' version '1.1.7'
+	id 'org.jsonschema2pojo' version '1.2.2'
 }
 
 group = 'com.fop'
@@ -15,6 +16,7 @@ java {
 
 repositories {
 	mavenCentral()
+	maven { url 'https://repo.spring.io/milestone' }
 }
 
 ext {
@@ -23,11 +25,14 @@ ext {
 }
 
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
-	implementation 'org.springframework.ai:spring-ai-mcp-client-spring-boot-starter'
 	implementation 'org.springframework.ai:spring-ai-openai-spring-boot-starter'
 	implementation 'org.springframework.shell:spring-shell-starter'
+	implementation 'org.postgresql:postgresql'
+	implementation(group: 'com.networknt', name: 'json-schema-validator', version: '1.5.5');
+	implementation 'com.fasterxml.jackson.dataformat:jackson-dataformat-yaml:2.18.0'
+	implementation 'jakarta.inject:jakarta.inject-api:2.0.1'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.shell:spring-shell-starter-test'
 	testImplementation 'com.h2database:h2'
@@ -41,6 +46,39 @@ dependencyManagement {
 	}
 }
 
+jsonSchema2Pojo {
+    source = files('architecture/specification/workflow-spec.json') // Path to your JSON schemas
+    targetPackage = 'com.fop.workflow.workflowengine.model.schema'    // Package name for generated classes
+    targetDirectory = file("${project.buildDir}/generated-sources/") // Target directory
+    includeConstructors = true // Generate constructors
+	includeGetters = true   // Generate getter methods
+	includeSetters = true  // Generate setter methods
+    generateBuilders = true    // Generate builder methods
+    annotationStyle = 'jackson' // Use Jackson annotations
+	includeHashcodeAndEquals = true // Generate hashCode() and equals
+	includeToString = true // Generate toString
+	includeJsr303Annotations = false // Generate JSR-303 annotations
+	sourceType = 'jsonschema'
+}
+
+sourceSets {
+    main {
+        java {
+            srcDirs 'src/main/java'
+        }
+    }
+    test {
+        java {
+            srcDirs 'src/test/java'
+            compileClasspath += sourceSets.main.output
+        }
+    }
+}
+
 tasks.named('test') {
 	useJUnitPlatform()
+}
+
+tasks.named('generateJsonSchema2Pojo') {
+	onlyIf {false} // The tasks should not be executed by default
 }

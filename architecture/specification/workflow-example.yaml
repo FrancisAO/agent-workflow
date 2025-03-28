@@ -1,0 +1,25 @@
+version: "1.0"
+name: "Sample Workflow"
+description: "This is a sample workflow specification."
+agents:
+  - name: "Agent A"
+    type: "Type A"
+    description: "This agent does something."
+    system_message: "System message for Agent A."
+    prompt: "Prompt for Agent A."
+  - name: "Agent B"
+    type: "Type B"
+    description: "This agent does something else."
+    system_message: "System message for Agent B."
+    prompt: "Prompt for Agent B."
+workflow:
+  - from: "Agent A"
+    to: "Agent B"
+    loop:
+      - condition: "Some condition"
+        max_iterations: 5
+  - from: "Agent B"
+    to: "Agent A"
+    loop:
+      - condition: "Another condition"
+        max_iterations: 3
