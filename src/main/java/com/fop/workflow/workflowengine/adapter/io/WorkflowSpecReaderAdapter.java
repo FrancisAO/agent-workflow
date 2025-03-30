@@ -18,6 +18,18 @@ import com.networknt.schema.ValidationMessage;
 public class WorkflowSpecReaderAdapter implements WorkflowSpecReaderPort {
     @Override
     public WorkflowSpec readWorkflowSpec(String path) throws IOException {
+        if (path == null || path.trim().isEmpty()) {
+            throw new IllegalArgumentException("Workflow path cannot be null or empty.");
+        }
+        if (!Files.exists(Paths.get(path))) {
+            throw new IllegalArgumentException("Workflow file does not exist: " + path);
+        }
+        if (!Files.isRegularFile(Paths.get(path))) {
+            throw new IllegalArgumentException("Path is not a file: " + path);
+        }
+        if (!path.toLowerCase().endsWith(".yaml") && !path.toLowerCase().endsWith(".yml")) {
+            throw new IllegalArgumentException("Workflow file must be a YAML file: " + path);
+        }
         // 1. YAML-Datei lesen und in JSON umwandeln
         InputStream yamlInputStream = Files.newInputStream(Paths.get(path));
         ObjectMapper yamlReader = new ObjectMapper(new YAMLFactory());
