@@ -3,6 +3,8 @@ package com.fop.workflow.workflowengine.infrastructure.adapter;
 import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 import java.io.IOException;
+
+import com.fop.workflow.workflowengine.adapter.io.WorkflowSpecReaderAdapter;
 import com.fop.workflow.workflowengine.model.schema.WorkflowSpec;
 
 class WorkflowSpecReaderAdapterTest {

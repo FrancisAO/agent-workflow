@@ -1,4 +1,4 @@
-package com.fop.workflow.workflowengine.adapter.adapter;
+package com.fop.workflow.workflowengine.adapter.io;
 
 import java.io.IOException;
 import java.io.InputStream;
