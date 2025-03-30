@@ -2,6 +2,9 @@
 ## Objective
 Write a Shell command to read in a workflow specification file.
 
+## Basic conditions
+- Do not change Files inside the `com.fop.workflow.workflowengine.model.schema` package
+
 ## Steps
 1. Create the package `service` inside the `application` package of the `workflowengine` package if it not exists.
 2. Create the class `WorkflowService` inside the `service` package you have just created if it not exists.
