@@ -2,6 +2,8 @@ package com.fop.workflow.workflowengine.adapter.ui;
 
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
+import org.springframework.shell.standard.ShellOption;
+
 import com.fop.workflow.workflowengine.application.port.in.WorkflowExecutionUseCase;
 import com.fop.workflow.workflowengine.model.schema.WorkflowSpec;
 
@@ -20,7 +22,7 @@ public class WorkflowShellCommands {
     }
 
     @ShellMethod("Executes a workflow from the specified path.")
-    public void executeWorkflow(String path) {
+    public void executeWorkflow(@ShellOption(value = { "path" }) String path) {
         // Validate the path is not null or empty
         if (path == null || path.trim().isEmpty()) {
             throw new IllegalArgumentException("Workflow path cannot be null or empty.");

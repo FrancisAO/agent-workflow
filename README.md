@@ -12,7 +12,8 @@ While agents dynamically control their own processes and independently determine
 This clear structure enables targeted control over the execution steps and ensures that the system processes remain traceable and repeatable.
 
 # Setup
-tbd
+Properties that must be provided in order to use the application:
+`spring.ai.openai.api-key`
 
 # Architecture
 Interessted people may consider the [software architecture documentation inside the directory /architecture](architecture/1-Intro-Goals.md)
