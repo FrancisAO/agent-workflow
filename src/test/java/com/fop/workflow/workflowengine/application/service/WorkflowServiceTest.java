@@ -39,6 +39,40 @@ public class WorkflowServiceTest {
         verify(workflowSpecReaderPort, times(1)).readWorkflowSpec(workflowPath);
     }
 
+    @Test
+    public void testReadWorkflow_IOException() throws IOException {
+        String workflowPath = "path/to/nonexistent/workflow.yaml";
+        IOException expectedException = new IOException("File not found");
+        when(workflowSpecReaderPort.readWorkflowSpec(workflowPath)).thenThrow(expectedException);
 
-    // Additional tests can be added here
+        IOException thrownException = assertThrows(IOException.class, () -> {
+            workflowService.readWorkflow(workflowPath);
+        });
+
+        assertEquals(expectedException, thrownException);
+        verify(workflowSpecReaderPort, times(1)).readWorkflowSpec(workflowPath);
+    }
+
+    @Test
+    public void testReadWorkflow_NullPath() throws IOException {
+        String nullPath = null;
+        
+        assertThrows(NullPointerException.class, () -> {
+            workflowService.readWorkflow(nullPath);
+        });
+    }
+
+    @Test
+    public void testReadWorkflow_EmptyPath() throws IOException {
+        String emptyPath = "";
+        IOException expectedException = new IOException("Empty path is not allowed");
+        when(workflowSpecReaderPort.readWorkflowSpec(emptyPath)).thenThrow(expectedException);
+
+        IOException thrownException = assertThrows(IOException.class, () -> {
+            workflowService.readWorkflow(emptyPath);
+        });
+
+        assertEquals(expectedException, thrownException);
+        verify(workflowSpecReaderPort, times(1)).readWorkflowSpec(emptyPath);
+    }
 }

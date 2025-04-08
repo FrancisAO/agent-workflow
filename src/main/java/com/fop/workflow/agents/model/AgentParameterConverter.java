@@ -1,4 +1,4 @@
-package com.fop.workflow.agents.infrastructure.repo;
+package com.fop.workflow.agents.model;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;

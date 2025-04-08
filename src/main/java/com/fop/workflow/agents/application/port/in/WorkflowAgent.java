@@ -2,7 +2,7 @@ package com.fop.workflow.agents.application.port.in;
 
 import java.util.Map;
 
-import com.fop.workflow.agents.infrastructure.repo.AgentParameterContainer;
+import com.fop.workflow.agents.model.AgentParameterContainer;
 
 public interface WorkflowAgent {
 

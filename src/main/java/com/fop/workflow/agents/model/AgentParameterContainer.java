@@ -1,4 +1,4 @@
-package com.fop.workflow.agents.infrastructure.repo;
+package com.fop.workflow.agents.model;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;

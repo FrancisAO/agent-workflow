@@ -1,10 +1,8 @@
 package com.fop.workflow.agents.application.entity;
 
-import java.util.Collections;
 import java.util.List;
 
 import com.fop.workflow.agents.application.parameter.AgentParameterSemantic;
-import com.fop.workflow.agents.infrastructure.repo.AgentParameter;
 
 public class AgentParameterContainerModel {
     private Long id;

@@ -1,4 +1,4 @@
-package com.fop.workflow.agents.infrastructure.adapter;
+package com.fop.workflow.agents.adapter;
 
 import java.util.stream.Collectors;
 
@@ -7,9 +7,9 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.fop.workflow.agents.application.entity.AgentParameterContainerModel;
 import com.fop.workflow.agents.application.port.out.PersistencePort;
-import com.fop.workflow.agents.infrastructure.repo.AgentParameter;
-import com.fop.workflow.agents.infrastructure.repo.AgentParameterContainer;
-import com.fop.workflow.agents.infrastructure.repo.AgentParameterContainerRepository;
+import com.fop.workflow.agents.model.AgentParameter;
+import com.fop.workflow.agents.model.AgentParameterContainer;
+import com.fop.workflow.agents.model.AgentParameterContainerRepository;
 
 @Service
 public class PersistenceAdapter implements PersistencePort {

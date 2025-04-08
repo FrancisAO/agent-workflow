@@ -1,7 +1,8 @@
-package com.fop.workflow.agents.infrastructure.adapter;
+package com.fop.workflow.agents.adapter;
 
+import com.fop.workflow.agents.adapter.PersistenceAdapter;
 import com.fop.workflow.agents.application.entity.AgentParameterContainerModel;
-import com.fop.workflow.agents.infrastructure.repo.AgentParameterContainerRepository;
+
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
@@ -10,6 +11,7 @@ import java.util.Arrays;
 import java.util.List;
 import com.fop.workflow.agents.application.parameter.AgentParameterSemantic;
 import com.fop.workflow.agents.application.parameter.AgentParameterType;
+import com.fop.workflow.agents.model.AgentParameterContainerRepository;
 import com.fop.workflow.agents.application.entity.AgentParameterModel;
 import java.time.LocalDateTime;
 
