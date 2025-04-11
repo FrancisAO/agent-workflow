@@ -1,16 +1,25 @@
 package com.fop.workflow.workflowengine.adapter.io;
 
-import static org.junit.jupiter.api.Assertions.*;
-import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
-import com.fop.workflow.workflowengine.model.schema.WorkflowSpec;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.io.TempDir;
 
-class WorkflowSpecReaderAdapterTest {
+import com.fop.workflow.workflowengine.adapter.schema.json.WorkflowSpecReaderAdapter;
+import com.fop.workflow.workflowengine.application.port.out.WorkflowDefinitions;
+
+public class WorkflowSpecReaderAdapterTest {
+
     @Test
     void testReadWorkflowSpec() throws IOException {
         WorkflowSpecReaderAdapter adapter = new WorkflowSpecReaderAdapter();
-        WorkflowSpec workflowSpec = adapter.readWorkflowSpec("architecture/specification/workflow-example.yaml");
+        WorkflowDefinitions workflowSpec = adapter.readWorkflowSpec("architecture/specification/workflow-example.yaml");
 
         assertNotNull(workflowSpec);
         assertEquals("1.0", workflowSpec.getVersion());
@@ -36,5 +45,80 @@ class WorkflowSpecReaderAdapterTest {
         assertEquals("Agent A", workflowSpec.getWorkflow().get(1).getTo());
         assertEquals("Another condition", workflowSpec.getWorkflow().get(1).getLoop().get(0).getCondition());
         assertEquals(3, workflowSpec.getWorkflow().get(1).getLoop().get(0).getMaxIterations());
+    }
+    
+    @Test
+    public void testReadWorkflowSpec_NullPath() {
+        WorkflowSpecReaderAdapter adapter = new WorkflowSpecReaderAdapter();
+        
+        IllegalArgumentException exception = assertThrows(
+            IllegalArgumentException.class,
+            () -> adapter.readWorkflowSpec(null)
+        );
+        
+        assertEquals("Workflow path cannot be null or empty.", exception.getMessage());
+    }
+    
+    @Test
+    public void testReadWorkflowSpec_EmptyPath() {
+        WorkflowSpecReaderAdapter adapter = new WorkflowSpecReaderAdapter();
+        
+        IllegalArgumentException exception = assertThrows(
+            IllegalArgumentException.class,
+            () -> adapter.readWorkflowSpec("")
+        );
+        
+        assertEquals("Workflow path cannot be null or empty.", exception.getMessage());
+    }
+    
+    @Test
+    public void testReadWorkflowSpec_WhitespacePath() {
+        WorkflowSpecReaderAdapter adapter = new WorkflowSpecReaderAdapter();
+        
+        IllegalArgumentException exception = assertThrows(
+            IllegalArgumentException.class,
+            () -> adapter.readWorkflowSpec("   ")
+        );
+        
+        assertEquals("Workflow path cannot be null or empty.", exception.getMessage());
+    }
+    
+    @Test
+    public void testReadWorkflowSpec_NonExistentFile() {
+        WorkflowSpecReaderAdapter adapter = new WorkflowSpecReaderAdapter();
+        String nonExistentPath = "non-existent-file.yaml";
+        
+        IllegalArgumentException exception = assertThrows(
+            IllegalArgumentException.class,
+            () -> adapter.readWorkflowSpec(nonExistentPath)
+        );
+        
+        assertEquals("Workflow file does not exist: " + nonExistentPath, exception.getMessage());
+    }
+    
+    @Test
+    public void testReadWorkflowSpec_NotAFile(@TempDir Path tempDir) throws IOException {
+        WorkflowSpecReaderAdapter adapter = new WorkflowSpecReaderAdapter();
+        Path directoryPath = Files.createDirectory(tempDir.resolve("test-directory"));
+        
+        IllegalArgumentException exception = assertThrows(
+            IllegalArgumentException.class,
+            () -> adapter.readWorkflowSpec(directoryPath.toString())
+        );
+        
+        assertEquals("Path is not a file: " + directoryPath, exception.getMessage());
+    }
+    
+    @Test
+    public void testReadWorkflowSpec_NotYamlFile(@TempDir Path tempDir) throws IOException {
+        WorkflowSpecReaderAdapter adapter = new WorkflowSpecReaderAdapter();
+        Path filePath = Files.createFile(tempDir.resolve("test-file.txt"));
+        
+        IllegalArgumentException exception = assertThrows(
+            IllegalArgumentException.class,
+            () -> adapter.readWorkflowSpec(filePath.toString())
+        );
+        
+        assertEquals("Workflow file must be a YAML file: " + filePath, exception.getMessage());
     }
 }

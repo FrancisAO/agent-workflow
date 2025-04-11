@@ -1,17 +1,22 @@
 package com.fop.workflow.workflowengine.application.service;
 
-import com.fop.workflow.workflowengine.application.port.out.WorkflowSpecReaderPort;
-import com.fop.workflow.workflowengine.model.schema.WorkflowSpec;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
-
-import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import java.io.IOException;
 
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import org.mockito.MockitoAnnotations;
+
+import com.fop.workflow.workflowengine.application.port.out.WorkflowDefinitions;
+import com.fop.workflow.workflowengine.application.port.out.WorkflowSpecReaderPort;
 
 public class WorkflowServiceTest {
 
@@ -29,10 +34,10 @@ public class WorkflowServiceTest {
     @Test
     public void testReadWorkflow_Success() throws IOException {
         String workflowPath = "path/to/workflow.yaml";
-        WorkflowSpec mockSpec = new WorkflowSpec(); // Assuming a default constructor exists
+        WorkflowDefinitions mockSpec = Mockito.mock(WorkflowDefinitions.class); // Assuming a default constructor exists
         when(workflowSpecReaderPort.readWorkflowSpec(workflowPath)).thenReturn(mockSpec);
 
-        WorkflowSpec result = workflowService.readWorkflow(workflowPath);
+        WorkflowDefinitions result = workflowService.readWorkflow(workflowPath);
 
         assertNotNull(result);
         assertEquals(mockSpec, result);
@@ -51,15 +56,6 @@ public class WorkflowServiceTest {
 
         assertEquals(expectedException, thrownException);
         verify(workflowSpecReaderPort, times(1)).readWorkflowSpec(workflowPath);
-    }
-
-    @Test
-    public void testReadWorkflow_NullPath() throws IOException {
-        String nullPath = null;
-        
-        assertThrows(NullPointerException.class, () -> {
-            workflowService.readWorkflow(nullPath);
-        });
     }
 
     @Test

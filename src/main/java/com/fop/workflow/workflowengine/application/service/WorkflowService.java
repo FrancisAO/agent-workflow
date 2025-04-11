@@ -5,8 +5,8 @@ import java.io.IOException;
 import org.springframework.stereotype.Service;
 
 import com.fop.workflow.workflowengine.application.port.in.WorkflowExecutionUseCase;
+import com.fop.workflow.workflowengine.application.port.out.WorkflowDefinitions;
 import com.fop.workflow.workflowengine.application.port.out.WorkflowSpecReaderPort;
-import com.fop.workflow.workflowengine.model.schema.WorkflowSpec;
 
 @Service
 public class WorkflowService implements WorkflowExecutionUseCase {
@@ -18,7 +18,7 @@ public class WorkflowService implements WorkflowExecutionUseCase {
     }
 
     @Override
-    public WorkflowSpec readWorkflow(String workflowPath) throws IOException {
+    public WorkflowDefinitions readWorkflow(String workflowPath) throws IOException {
         return workflowSpecReaderPort.readWorkflowSpec(workflowPath);
     }
 }

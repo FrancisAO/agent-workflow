@@ -4,14 +4,14 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.Test;
 import java.io.IOException;
 
-import com.fop.workflow.workflowengine.adapter.io.WorkflowSpecReaderAdapter;
-import com.fop.workflow.workflowengine.model.schema.WorkflowSpec;
+import com.fop.workflow.workflowengine.adapter.schema.json.WorkflowSpecReaderAdapter;
+import com.fop.workflow.workflowengine.application.port.out.WorkflowDefinitions;
 
 class WorkflowSpecReaderAdapterTest {
     @Test
     void testReadWorkflowSpec() throws IOException {
         WorkflowSpecReaderAdapter adapter = new WorkflowSpecReaderAdapter();
-        WorkflowSpec workflowSpec = adapter.readWorkflowSpec("architecture/specification/workflow-example.yaml");
+        WorkflowDefinitions workflowSpec = adapter.readWorkflowSpec("architecture/specification/workflow-example.yaml");
 
         assertNotNull(workflowSpec);
         assertEquals("1.0", workflowSpec.getVersion());

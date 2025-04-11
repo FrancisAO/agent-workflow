@@ -1,10 +1,14 @@
 package com.fop.workflow.workflowengine.adapter.ui;
 
+import com.fop.workflow.agents.application.port.in.AgentPort;
+import com.fop.workflow.workflowengine.adapter.schema.json.WorkflowSpec;
 import com.fop.workflow.workflowengine.application.port.in.WorkflowExecutionUseCase;
-import com.fop.workflow.workflowengine.model.schema.WorkflowSpec;
+import com.fop.workflow.workflowengine.application.port.out.WorkflowDefinitions;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.MockitoAnnotations;
 
 import java.io.IOException;
@@ -19,13 +23,15 @@ public class WorkflowShellCommandsTest {
 
     @Mock
     private WorkflowExecutionUseCase workflowExecutionUseCase;
+    @Mock
+    private AgentPort agentPort;
 
     private WorkflowShellCommands workflowShellCommands;
 
     @BeforeEach
     public void setUp() {
         MockitoAnnotations.openMocks(this);
-        workflowShellCommands = new WorkflowShellCommands(workflowExecutionUseCase);
+        workflowShellCommands = new WorkflowShellCommands(workflowExecutionUseCase,agentPort);
     }
 
     @Test
@@ -97,7 +103,7 @@ public class WorkflowShellCommandsTest {
     @Test
     public void executeWorkflow_ValidPath_CallsReadWorkflow() throws IOException {
         String validPath = Paths.get("architecture", "specification", "workflow-example.yaml").toString();
-        WorkflowSpec mockSpec = new WorkflowSpec();
+        WorkflowDefinitions mockSpec = Mockito.mock(WorkflowDefinitions.class);
 
         // Mock Files.exists and Files.isRegularFile
         Path path = Paths.get(validPath);
