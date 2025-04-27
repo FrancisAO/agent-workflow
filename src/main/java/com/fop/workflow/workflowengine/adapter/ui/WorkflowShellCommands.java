@@ -1,24 +1,16 @@
 package com.fop.workflow.workflowengine.adapter.ui;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+
 import org.springframework.shell.standard.ShellComponent;
 import org.springframework.shell.standard.ShellMethod;
 import org.springframework.shell.standard.ShellOption;
 
-import com.fop.workflow.agents.application.port.in.Agent;
-import com.fop.workflow.agents.application.port.in.AgentCreateException;
 import com.fop.workflow.agents.application.port.in.AgentPort;
 import com.fop.workflow.workflowengine.application.port.in.WorkflowExecutionUseCase;
-import com.fop.workflow.workflowengine.application.port.out.AgentDefinition;
-import com.fop.workflow.workflowengine.application.port.out.WorkflowDefinitions;
-
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.io.IOException;
 
 @ShellComponent
 public class WorkflowShellCommands {
@@ -31,6 +23,7 @@ public class WorkflowShellCommands {
         this.agentPort = agentPort;
     }
 
+    // todo refactor: teile auslagern
     @ShellMethod("Executes a workflow from the specified path.")
     public void executeWorkflow(@ShellOption(value = { "path" }) String path) {
         // Validate the path is not null or empty
@@ -57,32 +50,12 @@ public class WorkflowShellCommands {
         }
 
         // Execute the workflow
-        List<Agent> agents = new ArrayList<>();;
         try {
-            WorkflowDefinitions workflowDef = workflowExecutionUseCase.readWorkflow(path);
-            for(AgentDefinition agentDef : workflowDef.getAgents()) {
-                String type = agentDef.getType();
-                String name = agentDef.getName();
-                String systemMessage = agentDef.getSystemMessage();
-                Map<String, Object> properties = new HashMap<String, Object>();
-                String sysMsgPropKey = agentPort.getSysMsgPropKey();
-                properties.put(sysMsgPropKey, systemMessage);
-                agents.add(agentPort.createAgent(name, type, properties));
-            }
-
-        } catch (IOException | AgentCreateException e) {
+            workflowExecutionUseCase.executeWorkflow(path);
+        } catch (IOException e) {
             throw new RuntimeException("Error reading workflow file: " + path, e);
         }
 
-        agents.forEach(agent -> {
-            // Execute the agent (this is a placeholder, actual execution logic will depend on your implementation)
-            System.out.println("Executing agent: " + agent.getName());
-            System.out.println("Agent type: " + agent.getType());
-            System.out.println("Agent properties: " + agent.getProperties());
-            System.out.println("Agent id: " + agent.getId());
-        });
-
-         
-        // Additional execution logic can be added here
     }
+
 }

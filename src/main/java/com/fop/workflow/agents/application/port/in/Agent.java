@@ -1,5 +1,6 @@
 package com.fop.workflow.agents.application.port.in;
 
+import java.util.List;
 import java.util.Map;
 
 public interface Agent {
@@ -14,6 +15,13 @@ public interface Agent {
 
     ExecutionResult execute();
 
-    ExecutionResult execute(String prompt);
+    ExecutionResult getLastResult();
+
+    /**
+     * Executes the agent with the given inputs.
+     * @param input
+     * @return
+     */
+    ExecutionResult execute(List<AgentOutput> inputs);
 
 }

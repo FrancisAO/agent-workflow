@@ -1,23 +1,23 @@
 package com.fop.workflow.workflowengine.adapter.ui;
 
-import com.fop.workflow.agents.application.port.in.AgentPort;
-import com.fop.workflow.workflowengine.adapter.schema.json.WorkflowSpec;
-import com.fop.workflow.workflowengine.application.port.in.WorkflowExecutionUseCase;
-import com.fop.workflow.workflowengine.application.port.out.WorkflowDefinitions;
-
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
-import org.mockito.Mockito;
-import org.mockito.MockitoAnnotations;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.Mockito.mockStatic;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-import static org.mockito.Mockito.*;
-import static org.junit.jupiter.api.Assertions.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+
+import com.fop.workflow.agents.application.port.in.AgentPort;
+import com.fop.workflow.workflowengine.application.port.in.WorkflowExecutionUseCase;
 
 public class WorkflowShellCommandsTest {
 
@@ -103,7 +103,7 @@ public class WorkflowShellCommandsTest {
     @Test
     public void executeWorkflow_ValidPath_CallsReadWorkflow() throws IOException {
         String validPath = Paths.get("architecture", "specification", "workflow-example.yaml").toString();
-        WorkflowDefinitions mockSpec = Mockito.mock(WorkflowDefinitions.class);
+
 
         // Mock Files.exists and Files.isRegularFile
         Path path = Paths.get(validPath);
@@ -112,10 +112,8 @@ public class WorkflowShellCommandsTest {
             mock.when(() -> Files.isRegularFile(path)).thenReturn(true);
         }
 
-        when(workflowExecutionUseCase.readWorkflow(validPath)).thenReturn(mockSpec);
-
         workflowShellCommands.executeWorkflow(validPath);
 
-        verify(workflowExecutionUseCase, times(1)).readWorkflow(validPath);
+        verify(workflowExecutionUseCase, times(1)).executeWorkflow(validPath);
     }
 }

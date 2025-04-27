@@ -1,7 +1,11 @@
 package com.fop.workflow.agents.application.port.in;
 
-public interface AgentServiceFactory {
+import com.fop.workflow.agents.application.service.AgentServiceImpl;
 
-    AgentService create();
+public class AgentServiceFactory {
+
+    public AgentService createService() {
+        return new AgentServiceImpl();
+    }
 
 }

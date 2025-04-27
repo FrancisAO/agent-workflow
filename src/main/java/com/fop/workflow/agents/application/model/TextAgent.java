@@ -1,9 +1,11 @@
 package com.fop.workflow.agents.application.model;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.fop.workflow.agents.application.port.in.AgentIntern;
+import com.fop.workflow.agents.application.port.in.AgentOutput;
 import com.fop.workflow.agents.application.port.in.ExecutionResult;
 
 public class TextAgent implements AgentIntern {
@@ -47,14 +49,20 @@ public class TextAgent implements AgentIntern {
     }
 
     @Override
-    public ExecutionResult execute(String prompt) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'execute'");
+    public void setId(Long id) {
+        this.id = id;
     }
 
     @Override
-    public void setId(Long id) {
-        this.id = id;
+    public ExecutionResult getLastResult() {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'getLastResult'");
+    }
+
+    @Override
+    public ExecutionResult execute(List<AgentOutput> inputs) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'execute'");
     }
 
 }

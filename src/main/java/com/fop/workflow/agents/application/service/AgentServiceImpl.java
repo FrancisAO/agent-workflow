@@ -8,7 +8,7 @@ import com.fop.workflow.agents.application.port.in.AgentService;
 import com.fop.workflow.agents.application.port.in.AgentServiceFactory;
 import com.fop.workflow.agents.application.type.AgentType;
 
-public class AgentServiceImpl implements AgentService, AgentServiceFactory {
+public class AgentServiceImpl implements AgentService {
 
     @Override
     public boolean isKnownAgentType(String type) {
@@ -32,9 +32,6 @@ public class AgentServiceImpl implements AgentService, AgentServiceFactory {
 
     }
 
-    @Override
-    public AgentService create() {
-        return new AgentServiceImpl();
-    }
+
 
 }
