@@ -27,7 +27,7 @@ import com.fop.workflow.workflowengine.application.port.out.WorkflowSpecReaderPo
 public class WorkflowService implements WorkflowExecutionUseCase {
 
     private final WorkflowSpecReaderPort workflowSpecReaderPort;
-    private AgentPort agentPort;
+    private final AgentPort agentPort;
 
     public WorkflowService(WorkflowSpecReaderPort workflowSpecReaderPort, AgentPort agentPort) {
         this.agentPort = agentPort;
@@ -44,49 +44,59 @@ public class WorkflowService implements WorkflowExecutionUseCase {
         try {
             List<Agent> agents = createAgents(workflowDefs);
             LinkedList<ExecutionStep> executionSteps = new LinkedList<>();
-
-            for (WorkflowDefinition workflowDef : workflowDefs.getWorkflow()) {
-                Agent fromAgent = findAgent(agents, workflowDef.getFrom());
-                Agent toAgent = findAgent(agents, workflowDef.getTo());
-                addExecutionStep(executionSteps, fromAgent, toAgent);
-                if (isRegularFlow(workflowDef)) {
-                    if (!isTransitiveExecutionStep(executionSteps)) {
-                        ExecutionResult fromResult = fromAgent.execute();
-                        if (fromResult.isSuccess()) {
-                            List<AgentOutput> results = fromResult.getResult();
-                            toAgent.execute(results);
-                        } else {
-                            // todo: retry-strategy ausführen wenn nicht erfolgreich
-                        }
-                    } else {
-                        ExecutionResult lastResult = fromAgent.getLastResult();
-                        if (lastResult.isSuccess()) {
-                            List<AgentOutput> results = lastResult.getResult();
-                            toAgent.execute(results);
-                        } else {
-                            // todo: abbruch wenn Ausführung von vorherigem Agent nicht erfolgreich
-                        }
-                    }
-                    // todo: retry-strategy ausführen
-
-                } else if (isLoopFlow(workflowDef)) {
-                    List<LoopDefinition> loop = workflowDef.getLoop();
-                    for (LoopDefinition loopDef : loop) {
-                        Integer maxIterations = loopDef.getMaxIterations();
-                        for (int i = maxIterations; i > 0; i--) {
-                            ExecutionResult fromResult = fromAgent.execute();
-                            if (fromResult.isSuccess()) {
-                                List<AgentOutput> results = fromResult.getResult();
-                                toAgent.execute(results);
-                            } else {
-                                // todo: retry-strategy ausführen
-                            }
-                        }
-                    }
-                }
-            }
+            
+            executeWorkflowSteps(workflowDefs, agents, executionSteps);
         } catch (AgentCreateException e) {
             throw new RuntimeException("Error creating agent: " + e.getMessage(), e);
+        }
+    }
+    
+    private void executeWorkflowSteps(WorkflowDefinitions workflowDefs, List<Agent> agents, LinkedList<ExecutionStep> executionSteps) {
+        for (WorkflowDefinition workflowDef : workflowDefs.getWorkflow()) {
+            Agent fromAgent = findAgent(agents, workflowDef.getFrom());
+            Agent toAgent = findAgent(agents, workflowDef.getTo());
+            addExecutionStep(executionSteps, fromAgent, toAgent);
+            
+            if (isRegularFlow(workflowDef)) {
+                executeRegularFlow(fromAgent, toAgent, executionSteps);
+            } else if (isLoopFlow(workflowDef)) {
+                executeLoopFlow(workflowDef, fromAgent, toAgent);
+            }
+        }
+    }
+    
+    private void executeRegularFlow(Agent fromAgent, Agent toAgent, LinkedList<ExecutionStep> executionSteps) {
+        if (!isTransitiveExecutionStep(executionSteps)) {
+            ExecutionResult fromResult = fromAgent.execute();
+            processExecutionResult(fromResult, toAgent);
+        } else {
+            ExecutionResult lastResult = fromAgent.getLastResult();
+            processExecutionResult(lastResult, toAgent);
+        }
+        // TODO: Implement retry strategy
+    }
+    
+    private void executeLoopFlow(WorkflowDefinition workflowDef, Agent fromAgent, Agent toAgent) {
+        List<LoopDefinition> loopDefinitions = workflowDef.getLoop();
+        for (LoopDefinition loopDef : loopDefinitions) {
+            int maxIterations = loopDef.getMaxIterations();
+            executeLoop(fromAgent, toAgent, maxIterations);
+        }
+    }
+    
+    private void executeLoop(Agent fromAgent, Agent toAgent, int maxIterations) {
+        for (int i = 0; i < maxIterations; i++) {
+            ExecutionResult fromResult = fromAgent.execute();
+            processExecutionResult(fromResult, toAgent);
+        }
+    }
+    
+    private void processExecutionResult(ExecutionResult result, Agent targetAgent) {
+        if (result.isSuccess()) {
+            List<AgentOutput> outputs = result.getResult();
+            targetAgent.execute(outputs);
+        } else {
+            // TODO: Implement retry strategy or error handling
         }
     }
 
@@ -98,22 +108,29 @@ public class WorkflowService implements WorkflowExecutionUseCase {
     private List<Agent> createAgents(WorkflowDefinitions workflowDefs) throws AgentCreateException {
         List<Agent> agents = new ArrayList<>();
         for (AgentDefinition agentDef : workflowDefs.getAgents()) {
-            String type = agentDef.getType();
-            String name = agentDef.getName();
-            String systemMessage = agentDef.getSystemMessage();
-            Map<String, Object> properties = new HashMap<String, Object>();
-            String sysMsgPropKey = agentPort.getSysMsgPropKey();
-            properties.put(sysMsgPropKey, systemMessage);
-            agents.add(agentPort.createAgent(type, name, properties));
+            agents.add(createSingleAgent(agentDef));
         }
         return agents;
     }
+    
+    private Agent createSingleAgent(AgentDefinition agentDef) throws AgentCreateException {
+        String type = agentDef.getType();
+        String name = agentDef.getName();
+        String systemMessage = agentDef.getSystemMessage();
+        
+        Map<String, Object> properties = new HashMap<>();
+        String sysMsgPropKey = agentPort.getSysMsgPropKey();
+        properties.put(sysMsgPropKey, systemMessage);
+        
+        return agentPort.createAgent(type, name, properties);
+    }
 
     /**
-     * checks if the last two execution steps are transitive realize transitivity, i.e.
-     * the current step is from agent B to agent C and the second last step was from agent A to agent B.
+     * Checks if the last two execution steps are transitive:
+     * The current step is from agent B to agent C and the second last step was from agent A to agent B.
      * A and C can be the same agent.
-     * @param executionSteps
+     * 
+     * @param executionSteps List of execution steps
      * @return true if the last two execution steps are transitive, false otherwise
      */
     private boolean isTransitiveExecutionStep(LinkedList<ExecutionStep> executionSteps) {
